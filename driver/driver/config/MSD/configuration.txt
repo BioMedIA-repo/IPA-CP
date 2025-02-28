@@ -1,0 +1,48 @@
+[Data]
+patch_x = 112
+patch_y = 112
+patch_z = 64
+data_name = MSD
+data_path = ../../../medical_data/MSD/processed_222
+
+[Network]
+model = unet_simple
+classes = 2
+backbone = resnet18
+ema_decay=0.99
+channels=1
+
+#unet_3D
+
+[Save]
+save_dir = ../../log/${Data:data_name}/${Network:model}/${Run:run_num}_gpu_${Run:gpu}
+save_model_path = ${save_dir}/checkpoint
+config_file = ${save_dir}/configuration.txt
+load_dir = ${Save:save_dir}
+load_model_path = ${load_dir}/checkpoint
+tmp_dir = ${save_dir}/tmp
+tensorboard_dir = ${save_dir}/tensorboard
+submission_dir = ${load_dir}/submissions
+log_file = ${save_dir}/train_log.txt
+
+[Optimizer]
+learning_algorithm = adam
+learning_rate = 2.5e-4
+#learning_rate = 0.01
+epsilon = 1e-12
+min_lrate = 1e-7
+clip = 5.0
+
+[Run]
+n_epochs = 200
+train_seg_batch_size = 2
+test_seg_batch_size = 1
+update_every = 1
+gpu = 0
+run_num = ${Network:model}_20221222
+workers = 1
+printfreq = 200
+gpu_count = 0
+default_seg_label_size = 30
+patience = 500
+
